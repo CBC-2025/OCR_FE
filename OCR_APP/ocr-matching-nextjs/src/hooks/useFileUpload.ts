@@ -36,7 +36,12 @@ const useFileUpload = () => {
             const data = await response.json();
             setJobId(data.jobId);
         } catch (err) {
-            setError(err.message);
+            // `err` is `unknown` in TypeScript; narrow it before accessing properties
+            if (err instanceof Error) {
+                setError(err.message);
+            } else {
+                setError(String(err));
+            }
         } finally {
             setUploading(false);
         }
