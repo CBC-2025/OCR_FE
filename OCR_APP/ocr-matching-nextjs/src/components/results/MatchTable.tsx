@@ -14,6 +14,7 @@ interface MatchTableResult {
 
 interface MatchTableProps {
   results: MatchTableResult[];
+  cacheBuster?: string | number;
 }
 
 const mapStatusToBackgroundColor = (status: 'match' | 'partial' | 'mismatch'): string => {
@@ -25,7 +26,7 @@ const mapStatusToBackgroundColor = (status: 'match' | 'partial' | 'mismatch'): s
   }
 };
 
-const MatchTable: React.FC<MatchTableProps> = ({ results }) => {
+const MatchTable: React.FC<MatchTableProps> = ({ results, cacheBuster }) => {
   return (
     <div className="overflow-x-auto">
       <table className="min-w-full border-collapse border border-gray-200">
@@ -48,6 +49,7 @@ const MatchTable: React.FC<MatchTableProps> = ({ results }) => {
                       imagePath={result.phieuchuyenImage}
                       alt={`Phiếu chuyển - ${getFieldDisplayName(result.field)}`}
                       className="mb-2"
+                      cacheBuster={cacheBuster}
                     />
                   )}
                   <div className="text-sm">{result.extractedText}</div>
@@ -60,6 +62,7 @@ const MatchTable: React.FC<MatchTableProps> = ({ results }) => {
                       imagePath={result.hopdongImage}
                       alt={`Hợp đồng - ${getFieldDisplayName(result.field)}`}
                       className="mb-2"
+                      cacheBuster={cacheBuster}
                     />
                   )}
                   <div className="text-sm">{result.originalText}</div>

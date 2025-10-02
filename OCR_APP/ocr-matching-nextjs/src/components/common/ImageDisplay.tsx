@@ -5,9 +5,10 @@ interface ImageDisplayProps {
   imagePath: string;
   alt: string;
   className?: string;
+  cacheBuster?: string | number;
 }
 
-const ImageDisplay: React.FC<ImageDisplayProps> = ({ imagePath, alt, className = '' }) => {
+const ImageDisplay: React.FC<ImageDisplayProps> = ({ imagePath, alt, className = '', cacheBuster }) => {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -20,8 +21,8 @@ const ImageDisplay: React.FC<ImageDisplayProps> = ({ imagePath, alt, className =
     }
 
     try {
-      // Use the helper function to get the image URL
-      const url = getImageUrl(imagePath);
+      // Use the helper function to get the image URL, include cache buster if provided
+      const url = getImageUrl(imagePath, cacheBuster);
       setImageUrl(url);
       setLoading(false);
     } catch (err) {

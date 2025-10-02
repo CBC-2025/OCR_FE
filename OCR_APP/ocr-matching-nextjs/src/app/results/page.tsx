@@ -123,7 +123,7 @@ const ResultsPage = () => {
             </div>
           </div>
           
-          <MatchTable results={tableResults} />
+          <MatchTable results={tableResults} cacheBuster={currentResult.uploadedAt} />
         </div>
       </div>
     </div>

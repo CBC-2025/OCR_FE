@@ -108,7 +108,8 @@ export const getImage = async (fileName: string): Promise<Blob> => {
 };
 
 // Helper function to get image URL for display
-export const getImageUrl = (fileName: string): string => {
+export const getImageUrl = (fileName: string, cacheBuster?: string | number): string => {
   const cleanFileName = fileName.replace(/^temp_crops[\\\/]/, '').replace(/\\/g, '/');
-  return `${API_BASE_URL}/get_image/${encodeURIComponent(cleanFileName)}`;
+  const base = `${API_BASE_URL}/get_image/${encodeURIComponent(cleanFileName)}`;
+  return cacheBuster ? `${base}?t=${encodeURIComponent(String(cacheBuster))}` : base;
 };
