@@ -3,10 +3,9 @@
 # The plugin handles SSR/ISR, redirects, and functions output automatically.
 
 [build]
-  # Uses the `build` script from package.json (next build)
+  base    = "ocr-matching-nextjs"
   command = "npm run build"
-  # Directory to publish (contains the production build)
-  publish = ".next"
+  publish = "ocr-matching-nextjs/.next"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
