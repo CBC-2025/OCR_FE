@@ -1,0 +1,17 @@
+# Netlify configuration for this Next.js app.
+# Keep this file minimal: specify the build command and enable the official Next.js plugin.
+# The plugin handles SSR/ISR, redirects, and functions output automatically.
+
+[build]
+  base    = "ocr-matching-nextjs"
+  command = "npm run build"
+  publish = "ocr-matching-nextjs/.next"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+# Notes:
+# - Do NOT store secrets in this file. Add production environment variables (for example
+#   NEXT_PUBLIC_API_BASE_URL) in the Netlify site Settings > Build & deploy > Environment.
+# - If you need a specific Node version, set it via the Netlify UI or add an `engines` field
+#   to package.json. Example: "engines": { "node": "18.x" }
