@@ -8,6 +8,8 @@ interface CurrentResult {
   imageFiles: string[];
   comparison: ComparisonResult;
   uploadedAt: string;
+  // Optional client-side object URL pointing to the original uploaded file (PDF/image)
+  originalFileUrl?: string;
 }
 
 interface ResultContextType {
@@ -29,6 +31,14 @@ export const ResultProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   };
 
   const clearResult = () => {
+    // Revoke any created object URL to avoid memory leaks
+    try {
+      if (currentResult && currentResult.originalFileUrl && currentResult.originalFileUrl.startsWith('blob:')) {
+        URL.revokeObjectURL(currentResult.originalFileUrl);
+      }
+    } catch (e) {
+      // ignore
+    }
     setCurrentResultState(null);
   };
 

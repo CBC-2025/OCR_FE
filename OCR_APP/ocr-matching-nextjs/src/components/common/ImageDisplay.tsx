@@ -29,7 +29,7 @@ const ImageDisplay: React.FC<ImageDisplayProps> = ({ imagePath, alt, className =
       setError('Failed to load image');
       setLoading(false);
     }
-  }, [imagePath]);
+  }, [imagePath, cacheBuster]);
 
   if (loading) {
     return (

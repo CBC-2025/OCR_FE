@@ -9,7 +9,7 @@ type DropzoneProps = {
   disabled?: boolean;
 };
 
-const Dropzone: React.FC<DropzoneProps> = ({ onDrop, disabled = false }) => {
+const Dropzone: React.FC<DropzoneProps> = ({ onDrop, disabled = false}) => {
   const onDropCallback = useCallback((acceptedFiles: File[]) => {
     if (disabled) return;
     if (typeof onDrop === 'function') {
@@ -44,7 +44,11 @@ const Dropzone: React.FC<DropzoneProps> = ({ onDrop, disabled = false }) => {
       <input {...getInputProps()} />
       <div className='flex flex-col items-center justify-center' style={{ width: 400, height: 150 }}>
         {disabled ? (
-          <p className="text-gray-400">Đang xử lý...</p>
+          <div className="mt-6 text-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto mb-2"></div>
+              <p className="text-blue-600">Đang xử lý ...</p>
+              <p className="text-sm text-gray-500">Điều này có thể mất một chút thời gian</p>
+          </div>
         ) : isDragActive ? (
           <div >Thả file ở đây ...</div>
         ) : (

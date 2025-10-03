@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ImageDisplay from '../common/ImageDisplay';
 import { getFieldDisplayName } from '@/utils/fieldNames';
 
@@ -15,6 +15,8 @@ interface MatchTableResult {
 interface MatchTableProps {
   results: MatchTableResult[];
   cacheBuster?: string | number;
+  isEditMode?: boolean;
+  onFieldEdit?: (field: string, sourceType: 'phieuchuyen' | 'hopdong', newValue: string) => void;
 }
 
 const mapStatusToBackgroundColor = (status: 'match' | 'partial' | 'mismatch'): string => {
@@ -26,7 +28,36 @@ const mapStatusToBackgroundColor = (status: 'match' | 'partial' | 'mismatch'): s
   }
 };
 
-const MatchTable: React.FC<MatchTableProps> = ({ results, cacheBuster }) => {
+const MatchTable: React.FC<MatchTableProps> = ({ results, cacheBuster, isEditMode = false, onFieldEdit }) => {
+  const [editingCell, setEditingCell] = useState<{field: string, type: 'phieuchuyen' | 'hopdong'} | null>(null);
+  const [editValue, setEditValue] = useState('');
+
+  const handleCellClick = (field: string, type: 'phieuchuyen' | 'hopdong', currentValue: string) => {
+    if (!isEditMode) return;
+    setEditingCell({ field, type });
+    setEditValue(currentValue);
+  };
+
+  const handleCellSave = () => {
+    if (editingCell && onFieldEdit) {
+      onFieldEdit(editingCell.field, editingCell.type, editValue);
+    }
+    setEditingCell(null);
+    setEditValue('');
+  };
+
+  const handleCellCancel = () => {
+    setEditingCell(null);
+    setEditValue('');
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleCellSave();
+    } else if (e.key === 'Escape') {
+      handleCellCancel();
+    }
+  };
   return (
     <div className="overflow-x-auto">
       <table className="min-w-full border-collapse border border-gray-200">
@@ -52,7 +83,24 @@ const MatchTable: React.FC<MatchTableProps> = ({ results, cacheBuster }) => {
                       cacheBuster={cacheBuster}
                     />
                   )}
-                  <div className="text-sm">{result.extractedText}</div>
+                  {editingCell?.field === result.field && editingCell?.type === 'phieuchuyen' ? (
+                    <textarea
+                      value={editValue}
+                      onChange={(e) => setEditValue(e.target.value)}
+                      onKeyDown={handleKeyDown}
+                      onBlur={handleCellSave}
+                      autoFocus
+                      className="w-full text-sm border border-blue-500 rounded p-1 min-h-[60px] resize-none"
+                      rows={2}
+                    />
+                  ) : (
+                    <div 
+                      className={`text-sm min-h-[60px] p-1 rounded ${isEditMode ? 'cursor-pointer hover:bg-blue-50 border border-transparent hover:border-blue-300' : ''}`}
+                      onClick={() => handleCellClick(result.field, 'phieuchuyen', result.extractedText)}
+                    >
+                      {result.extractedText || (isEditMode ? 'Click để chỉnh sửa...' : '')}
+                    </div>
+                  )}
                 </div>
               </td>
               <td className="border border-gray-300 p-2">
@@ -65,7 +113,24 @@ const MatchTable: React.FC<MatchTableProps> = ({ results, cacheBuster }) => {
                       cacheBuster={cacheBuster}
                     />
                   )}
-                  <div className="text-sm">{result.originalText}</div>
+                  {editingCell?.field === result.field && editingCell?.type === 'hopdong' ? (
+                    <textarea
+                      value={editValue}
+                      onChange={(e) => setEditValue(e.target.value)}
+                      onKeyDown={handleKeyDown}
+                      onBlur={handleCellSave}
+                      autoFocus
+                      className="w-full text-sm border border-blue-500 rounded p-1 min-h-[60px] resize-none"
+                      rows={2}
+                    />
+                  ) : (
+                    <div 
+                      className={`text-sm min-h-[60px] p-1 rounded ${isEditMode ? 'cursor-pointer hover:bg-blue-50 border border-transparent hover:border-blue-300' : ''}`}
+                      onClick={() => handleCellClick(result.field, 'hopdong', result.originalText)}
+                    >
+                      {result.originalText || (isEditMode ? 'Click để chỉnh sửa...' : '')}
+                    </div>
+                  )}
                 </div>
               </td>
               <td className="border border-gray-300 p-2">

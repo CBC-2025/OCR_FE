@@ -20,11 +20,21 @@ const UploadPage: React.FC = () => {
             const result: ExtractPdfResponse = await extractPdf(file);
 
             // Store result in context
+            // Create an object URL for the original uploaded file so the frontend can display it
+            let objectUrl: string | undefined;
+            try {
+                objectUrl = URL.createObjectURL(file as Blob);
+            } catch (e) {
+                // If creating object URL fails, leave undefined
+                objectUrl = undefined;
+            }
+
             setCurrentResult({
                 extractedData: result.extracted_data,
                 imageFiles: result.image_files,
                 comparison: result.comparison,
-                uploadedAt: new Date().toISOString()
+                uploadedAt: new Date().toISOString(),
+                originalFileUrl: objectUrl,
             });
 
             // Navigate to results page
@@ -46,15 +56,14 @@ const UploadPage: React.FC = () => {
                 Định dạng được hỗ trợ: PDF, hình ảnh.
             </p>
             
-            <Dropzone onDrop={handleFiles} disabled={isProcessing} />
-
-            {isProcessing && (
+            {/* {isProcessing && (
                 <div className="mt-6 text-center">
                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto mb-2"></div>
                     <p className="text-blue-600">Đang xử lý ...</p>
                     <p className="text-sm text-gray-500">Điều này có thể mất một chút thời gian</p>
                 </div>
-            )}
+            )} */}
+            <Dropzone onDrop={handleFiles} disabled={isProcessing}/>
         </div>
     );
 };
